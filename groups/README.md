@@ -8,7 +8,7 @@ This sample can be used to get a `groups` claim in the id/access token. The way 
 ## To Deploy the Azure Function
 
 - Create an Azure Function App with runtime `.NET Core` and create a new Function of type `HTTPTrigger`
-- Open the code editor in the portal and paste over the code from [run.csx](./source-code/run-csx)
+- Open the code editor in the portal and paste over the code from [run.csx](./source-code/run.csx)
 - Save the code
 - Add to Configuration App Settings with the key name of `B2C_{guid}_ClientId` and `B2C_{guid}_ClientSecret` where the `{guid}` part is the guid of your B2C tenant. The value of the respective config settings is an App Reg in your B2C tenant with permission of `User.Read.All` for Microsoft Graph API.
 
