@@ -102,7 +102,7 @@ The last change in your `TrustFrameworkExtensions.xml` file is to modify your us
 </UserJourneys>
 ```
 
-Then you need to update your Relaying Party file which in this sample is [SignUpOrSignin.xml](.\policies\SignUpOrSignin.xml). It needs to return the `groupds` claim.
+Then you need to update your Relaying Party file which in this sample is [SignUpOrSignin.xml](./policies/SignUpOrSignin.xml). It needs to return the `groupds` claim.
 
 ```xml
         <OutputClaim ClaimTypeReferenceId="groups" />
