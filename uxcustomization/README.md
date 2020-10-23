@@ -47,3 +47,5 @@ So, futher down in the `<BuildingBlocks>` element you add the following. It will
       </LocalizedResources>
     </Localization>    
 ```
+
+If you want to customize more `UxElement`, you will find the `StringId` names in this documentation page: [Localization string IDs](https://docs.microsoft.com/en-us/azure/active-directory-b2c/localization-string-ids)
