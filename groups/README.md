@@ -14,7 +14,7 @@ This sample can be used to get a `groups` claim in the id/access token. The way 
 
 ## To Deploy the B2C Custom Policy
 
-The sample [TrustFrameworkExtensions.xml](.\policies\TrustFrameworkExtensions.xml) contains the changes you need to to do to get a working solution.
+The sample [TrustFrameworkExtensions.xml](./policies/TrustFrameworkExtensions.xml) contains the changes you need to to do to get a working solution.
 
 The changes in you solutions file `TrustFrameworkExtensions.xml` are these:
 
