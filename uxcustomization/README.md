@@ -88,7 +88,7 @@ function showHidePasswordElements(displayStyle) {
 }
 
 var buttons = document.getElementsByClassName("buttons")[0];
-buttons.innerHTML = buttons.innerHTML + "<button id=\"idContinue\" onclick=\"continueLogin()\">Continue</button>";
+buttons.innerHTML = buttons.innerjavascriptHTML + "<button id=\"idContinue\" onclick=\"continueLogin()\">Continue</button>";
 showHidePasswordElements("none");
 
 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -112,3 +112,14 @@ function continueLogin() {
 </script>
 </html>
 ``` 
+
+You need to edit the Relying Party file `SignUpOrSignin.xml` to make it allow javascript. You do that by adding
+
+```xml
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignUpOrSignIn" />
+    <UserJourneyBehaviors>
+      <ScriptExecution>Allow</ScriptExecution>
+    </UserJourneyBehaviors>
+    <TechnicalProfile Id="PolicyProfile">
+```
