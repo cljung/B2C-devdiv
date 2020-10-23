@@ -107,3 +107,7 @@ Then you need to update your Relaying Party file which in this sample is [SignUp
 ```xml
         <OutputClaim ClaimTypeReferenceId="groups" />
 ```
+
+## Testing
+
+Open the `Azure Active Directory` blade in portal.azure.com for the B2C tenant, goto `groups` and add a B2C user as a member of the group. Signin in with this user should produce a token including the `groups`. 
