@@ -1,9 +1,6 @@
 # B2C UX Customization
 
-This sample can be used to get a `groups` claim in the id/access token. The way it works is
-
-- B2C makes a REST API call to an Azure Function
-- The Azure Function makes a GraphAPI call to pull up the user's group membership
+This sample shows how you can customize a B2C UX via the custom policies and via custom html.
 
 ## B2C UX Customization
 
