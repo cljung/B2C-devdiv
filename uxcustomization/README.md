@@ -9,7 +9,7 @@ This sample can be used to get a `groups` claim in the id/access token. The way 
 
 This part shows you how you can modify UxElements via changes in the B2C policy files. This includes things like standard paragraph headers, etc, that B2C presents that you may wish to modify/override.
 
-## Override ContentDefinitions
+## Override standard B2C UX via ContentDefinitions
 
 In order to make modifications to the standard UX, you need to override the `ContentDefinition` of the page you want to modify. In our case we will add a `LocalizedResourcesReferences` element to the `api.signuporsignin` page definition. This definition means we open up the ability to make changes to the UX. 
 
@@ -49,3 +49,5 @@ So, futher down in the `<BuildingBlocks>` element you add the following. It will
 ```
 
 If you want to customize more `UxElement`, you will find the `StringId` names in this documentation page: [Localization string IDs](https://docs.microsoft.com/en-us/azure/active-directory-b2c/localization-string-ids)
+
+## Override UX in the Browser
