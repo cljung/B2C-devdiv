@@ -18,7 +18,7 @@ The sample [TrustFrameworkExtensions.xml](./policies/TrustFrameworkExtensions.xm
 
 The changes in you solutions file `TrustFrameworkExtensions.xml` are these:
 
-You need a claims type definition for storing the group collection
+You need a claims type definition for storing the group collection. This change goes inside the `<BuidlingBlocks>` element in your `TrustFrameworkExtensions.xml`.
 
 ```xml
     <ClaimsSchema>
@@ -30,7 +30,7 @@ You need a claims type definition for storing the group collection
     </ClaimsSchema>
 ```
 
-You then need to add a claims provider to call the Azure Function. Update the following
+You then need to add a claims provider to call the Azure Function. This change goes inside the `<ClaimsProviders>` element in your `TrustFrameworkExtensions.xml`. Update the following
 - ServiceUrl
 - tenantId <InputClaim>
 
