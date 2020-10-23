@@ -64,6 +64,11 @@ Then, you modify the `<ContentDefinition>` element you created above to be like 
         <Metadata>
           <Item Key="DisplayName">Signin and Signup</Item>
         </Metadata>
+        <!-- added -->
+        <LocalizedResourcesReferences MergeBehavior="Prepend">
+            <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.signuporsignin.en" />
+        </LocalizedResourcesReferences>      
+        <!-- added -->
       </ContentDefinition>
 ```
 
