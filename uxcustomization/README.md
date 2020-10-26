@@ -2,6 +2,8 @@
 
 This sample shows how you can customize a B2C UX via the custom policies and via custom html.
 
+![JWT token with Group claims](/media/uxcust-page1-and-2.png)
+
 ## B2C UX Customization
 
 This part shows you how you can modify UxElements via changes in the B2C policy files. This includes things like standard paragraph headers, etc, that B2C presents that you may wish to modify/override.
