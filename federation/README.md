@@ -1,6 +1,6 @@
 # B2C Federation with AzureAD
 
-This sample shows how to quickly setup federation using the [B2C Powershell Module](https://github.com/cljung/AzureAD-B2C-scripts) that exists in this repo. The documentation for how to configure [federation with Azure AD](https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-single-tenant-custom) is available here, but this github repor will show you how to do it via script.
+This sample shows how to quickly setup federation using the B2C Powershell Module that exists in [this repo](https://github.com/cljung/AzureAD-B2C-scripts). The documentation for how to configure federation with Azure AD is available [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-single-tenant-custom), but this github repo will show you how to do it via script.
 
 ![AzureAD Claims Provider selectcion](/media/fed-page-1.png)
 
@@ -71,11 +71,13 @@ New-AzureADB2CPolicyKey -KeyContainerName "B2C_1A_FabrikamAppSecret" -KeyType "s
 
 The, we need to add the ClaimsProvider for AzureAD. Note that the AadTenantName (before the dot) needs match the part of the KeyContainerName above. If you have a AadTenantName of contoso.com, the KeyContainerName must be B2C_1A_ContosoAppSecret. 
 
+The $AppId is the AppId (client_id) of the application you registered in AzureAD.
+
 ```powershell
 Set-AzureADB2CClaimsProvider -ProviderName "AzureAD" -AadTenantName "fabrikam.com" -client_id $AppId
 ```
 
-Open the file `trustFrameworkExtensions.xml` in Visual Studio Code and make the following changes.
+Open the file `TrustFrameworkExtensions.xml` in Visual Studio Code and make the following changes.
 
 - Find `<Item Key="METADATA">` and make sure it points to your tenant after `login.microsoftonline.com`.
 
