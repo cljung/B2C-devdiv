@@ -2,9 +2,7 @@
 
 This sample shows how to quickly setup federation using the B2C Powershell Module that exists in [this repo](https://github.com/cljung/AzureAD-B2C-scripts). The documentation for how to configure federation with Azure AD is available [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-single-tenant-custom), but this github repo will show you how to do it via script.
 
-![AzureAD Claims Provider selectcion](/media/fed-page-1.png)
-
-![AzureAD Signin page](/media/fed-page-2.png)
+![AzureAD Claims Provider selectcion](/media/fed-page-1.png) ![AzureAD Signin page](/media/fed-page-2.png)
 
 
 ## B2C Powershell Module - Install
@@ -89,3 +87,32 @@ Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```
 
 You should see something like the screenshots at top of this page.
+
+## GraphAPI 
+
+Once you've signed in with a federated AzureAD user for the first time, it's time to use Graph Explorer to check out how B2C stores the federated user data. In order to do that, do the following
+
+1. Launch [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer)
+1. Sign in with the local admin you created, ie `graphexplorer@yourtenant.onmicrosoft.com`. Signing in with another user might lead you to another tenant.
+1. Change the query to `https://graph.microsoft.com/v1.0/users/?$select=id,displayName,identities` and press `Run Query`. You might need to Modify Permissions in order to run the query.
+1. Search for the user you created (Ctrl+F will do good on the query result). 
+
+You should see something like below. The `identities` collection will hold a `signInType` with the value of `federated` that points back to your AzureAD tenant. The `issuerAssignedId` is the objectId of your user in the AzureAD tenant. 
+
+```json
+"id": "8b4dd578-cb56-4a90-945d-b02c8b982bd0",
+"displayName": "Megan Bowen",
+"identities": [
+    {
+        "signInType": "federated",
+        "issuer": "https://login.microsoftonline.com/aabf2e33-ab5c-49ac-8f62-81af9596e434/v2.0",
+        "issuerAssignedId": "c30fb0d0-d9a5-47ef-ae09-6902a9a06021"
+    },
+    {
+        "signInType": "userPrincipalName",
+        "issuer": "yourtenant.onmicrosoft.com",
+        "issuerAssignedId": "cpim_bfea5eec-e634-4c7f-b36f-cc06aca16bff@yourtenant.onmicrosoft.com"
+    }
+]
+},
+```
