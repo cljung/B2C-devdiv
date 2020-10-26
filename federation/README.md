@@ -71,7 +71,7 @@ First, we need to add the client secret for the AzureAD application. This is don
 New-AzureADB2CPolicyKey -KeyContainerName "B2C_1A_FabrikamAppSecret" -KeyType "secret" -KeyUse "sig" -Secret $yoursecret
 ```
 
-The, we need to add the ClaimsProvider for AzureAD. Note that the AadTenantName (before the dot) needs match the part of the KeyContainerName above. If you have a AadTenantName of contoso.com, the KeyContainerName must be B2C_1A_ContosoAppSecret. 
+Then, we need to add the ClaimsProvider for AzureAD. Note that the AadTenantName (before the dot) needs match the part of the KeyContainerName above. If you have a AadTenantName of contoso.com, the KeyContainerName must be B2C_1A_ContosoAppSecret. 
 
 The $AppId is the AppId (client_id) of the application you registered in AzureAD.
 
@@ -83,7 +83,7 @@ Open the file `TrustFrameworkExtensions.xml` in Visual Studio Code and make the 
 
 - Find `<Item Key="METADATA">` and make sure it points to your tenant after `login.microsoftonline.com`.
 
-Then save the file, upload the policies again to B2C and do another test run. Now you have 
+Then save the file, upload the policies again to B2C and do another test run.  
 
 ```powershell
 Push-AzureADB2CPolicyToTenant
