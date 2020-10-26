@@ -59,6 +59,10 @@ Follow the documentation on how to [Register an Azure AD app](https://docs.micro
 - Redirect Uri must be `https://your-B2C-tenant-name.b2clogin.com/your-B2C-tenant-name.onmicrosoft.com/oauth2/authresp`
 - Create an App secret
 
+Also, make sure you go into `Token configuration` to add email, family_name and given_name to your AzureAD token. The B2C policy is designed to pickup these claims and if AzureAD can give you this information, why would you bother the user filling it in.
+
+![Token Configuration](/media/fed-page-3.png)
+
 ## Adding a Claims Provider for Azure AD
 
 First, we need to add the client secret for the AzureAD application. This is done via the following command.
