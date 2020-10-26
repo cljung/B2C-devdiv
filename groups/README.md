@@ -5,6 +5,8 @@ This sample can be used to get a `groups` claim in the id/access token. The way 
 - B2C makes a REST API call to an Azure Function
 - The Azure Function makes a GraphAPI call to pull up the user's group membership
 
+![JWT token with Group claims](/media/jwt-token-with-group-claim.png)
+
 ## To Deploy the Azure Function
 
 - Create an Azure Function App with runtime `.NET Core` and create a new Function of type `HTTPTrigger`
