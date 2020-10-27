@@ -6,35 +6,7 @@ This sample shows how to quickly setup federation using the B2C Powershell Modul
 
 
 ## B2C Powershell Module - Install
-As mentioned, the [B2C Powershell Module](https://github.com/cljung/AzureAD-B2C-scripts) exists here and in order to use it, you need to `git clone` it and you need to either install the AzureAD powershell module on Windows or install Azure CLI on a Mac. 
-
-```powershell
-# open a powershell command prompt as Administrator (Win-key, powershell, Run as Admin)
-if ($null -eq (get-module AzureAD)) {
-    Install-Module -Name AzureAD
-}
-```
-
-```powershell
-git clone https://github.com/cljung/AzureAD-B2C-scripts.git
-cd AzureAD-B2C-scripts
-import-module .\AzureADB2C-Scripts.psm1
-```
-
-Then you need to complete the install. It is described in the other repo, but the steps are repeated here.
-
-```powershell
-Connect-AzureADB2CEnv -t "yourtenant"
-New-AzureADB2CGraphApp -n "B2C-Graph-App" -CreateConfigFile
-New-AzureADB2CLocalAdmin -u "graphexplorer" -RoleNames @("Company Administrator")
-Start-AzureADB2CPortal
-# find B2C-Graph-App and grant permission to the app before continuing
-```
-
-If you haven't already completed the setup of Identity Experience Framework in your B2C tenant, run this command to complete it.
-```powershell
-Enable-AzureADB2CIdentityExperienceFramework -n "ABC-WebApp" -f "abc123"
-```
+Quickly run through the [1-begin](./1-begin) lab to make sure you have configured the B2C Identity Experience Framework.
 
 ## Creating a new B2C Custom Policy Project
 

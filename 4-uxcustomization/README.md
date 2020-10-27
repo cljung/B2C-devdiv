@@ -8,6 +8,14 @@ This sample shows how you can customize a B2C UX via the custom policies and via
 
 This part shows you how you can modify UxElements via changes in the B2C policy files. This includes things like standard paragraph headers, etc, that B2C presents that you may wish to modify/override.
 
+## Creating a new B2C Custom Policy Project
+
+Starting a new B2C Custom Policy project with the ***B2C Powershell Module*** is very easy. You just run the following command. Then, open the folder in Visual Studio Code and continue with the below changes.
+
+```powershell
+New-AzureADB2CPolicyProject -PolicyPrefix "ux"
+```
+
 ## Override standard B2C UX via ContentDefinitions
 
 In order to make modifications to the standard UX, you need to override the `ContentDefinition` of the page you want to modify. In our case we will add a `LocalizedResourcesReferences` element to the `api.signuporsignin` page definition. This definition means we open up the ability to make changes to the UX. 
@@ -126,4 +134,11 @@ You need to edit the Relying Party file `SignUpOrSignin.xml` to make it allow ja
       <ScriptExecution>Allow</ScriptExecution>
     </UserJourneyBehaviors>
     <TechnicalProfile Id="PolicyProfile">
+```
+
+## Upload and test
+
+```powershell
+Push-AzureADB2CPolicyToTenant
+Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```

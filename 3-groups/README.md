@@ -7,6 +7,9 @@ This sample can be used to get a `groups` claim in the id/access token. The way 
 
 ![JWT token with Group claims](/media/jwt-token-with-group-claim.png)
 
+## B2C Powershell Module - Install
+Quickly run through the [1-begin](./1-begin) lab to make sure you have configured the B2C Identity Experience Framework.
+
 ## To Deploy the Azure Function
 
 - Create an Azure Function App with runtime `.NET Core` and create a new Function of type `HTTPTrigger`
