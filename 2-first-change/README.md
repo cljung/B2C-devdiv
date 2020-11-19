@@ -11,7 +11,7 @@ The part you add to SignupOrSignin.xml is to define how log the SSO cookie shoul
 
 ## Sign in with Username or LoyalityNumber
 
-The TrustFrameworkBase.xml defines a setting named `setting.operatingMode` set to email. This is the setting that forces the signing name to evaluate to an email address. In your trustFrameworkElements.xml file, add the below line that changes this setting to `<Item Key="setting.operatingMode">username</Item>`. This will enable the input textbox in the UX to allow anything and not just an email.
+The TrustFrameworkBase.xml defines a setting named `setting.operatingMode` set to email. This is the setting that forces the signing name to evaluate to an email address. In your TrustFrameworkExtensions.xml file, add the below line that changes this setting to `<Item Key="setting.operatingMode">username</Item>`. This will enable the input textbox in the UX to allow anything and not just an email.
 
 ```xml
 <ClaimsProvider>
