@@ -56,7 +56,7 @@ You then need to add a claims provider to call the Azure Function. This change g
             <Item Key="ServiceUrl">https://your-azfunc.azurewebsites.net/api/GetGroupMembershipMSGraph?code=...</Item>
             <Item Key="AuthenticationType">None</Item>
             <Item Key="SendClaimsIn">Body</Item>
-            <Item Key="AllowInsecureAuthInProduction">false</Item>
+            <Item Key="AllowInsecureAuthInProduction">true</Item>
           </Metadata>
           <InputClaims>
             <InputClaim Required="true" ClaimTypeReferenceId="objectId" />
