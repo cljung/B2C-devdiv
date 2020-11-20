@@ -92,7 +92,6 @@ In that `unified.html` file, you then should add the following. This will modify
 ```html
 </body>
 <script>
-
 function showHidePasswordElements(displayStyle) {
     document.getElementById("password").style.display = displayStyle;
     document.getElementById("forgotPassword").style.display = displayStyle;
@@ -109,11 +108,17 @@ document.getElementById("signInName").addEventListener("keyup", autoRedirectToCl
 function autoRedirectToClaimsProvider(e) {
     if ( re.test(String( document.getElementById("signInName").value.toLowerCase() ) ) ) {
         if (document.getElementById("signInName").value.endsWith(".onmicrosoft.com") ) {
-            document.getElementById("ContosoExchange").click();
+            // document.getElementById("ContosoExchange").click();
+            // the button needs to end with "Employee"
+            var btns = document.getElementsByClassName("accountButton claims-provider-selection");
+            for (var index = 0; index < btns.length; ++index) {
+                if ( btns[index].innerHTML.endsWith(" Employee") ) {
+                    btns[index].click();
+                }
+            }
         }
     }  
 }    
-
 function continueLogin() {
     if ( re.test(String( document.getElementById("signInName").value.toLowerCase() ) ) ) {
         document.getElementById("idContinue").style.display = "none";
