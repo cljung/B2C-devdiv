@@ -94,13 +94,13 @@ In that `unified.html` file, you then should add the following. This will modify
 <script>
 
 function showHidePasswordElements(displayStyle) {
-    document.getElementById("next").style.display = displayStyle;
     document.getElementById("password").style.display = displayStyle;
     document.getElementById("forgotPassword").style.display = displayStyle;
+    document.getElementById("next").style.display = displayStyle;
 }
 
 var buttons = document.getElementsByClassName("buttons")[0];
-buttons.innerHTML = buttons.innerjavascriptHTML + "<button id=\"idContinue\" onclick=\"continueLogin()\">Continue</button>";
+buttons.innerHTML = buttons.innerHTML + "<button id=\"idContinue\" style=\"display:inline-block;\" onclick=\"continueLogin()\">Continue</button>";
 showHidePasswordElements("none");
 
 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
