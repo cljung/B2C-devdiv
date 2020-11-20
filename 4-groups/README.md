@@ -12,12 +12,16 @@ Quickly run through the [1-begin](./1-begin) lab to make sure you have configure
 
 ## To Deploy the Azure Function
 
-- Create an Azure Function App with runtime `.NET Core` and create a new Function of type `HTTPTrigger`
+- Create an [Azure Function App](https://ms.portal.azure.com/#create/Microsoft.FunctionApp) with runtime `.NET Core` and create a new Function of type `HTTPTrigger`. Choose OS=Windows and Plan type=Consumption.
 - Open the code editor in the portal and paste over the code from [run.csx](./source-code/run.csx)
 - Save the code
 - Add to Configuration App Settings with the key name of `B2C_{guid}_ClientId` and `B2C_{guid}_ClientSecret` where the `{guid}` part is the guid of your B2C tenant. The value of the respective config settings is an App Reg in your B2C tenant with permission of `User.Read.All` for Microsoft Graph API.
 
 In a real deployment you probably would create a separate App Registration with the appropriate Graph API permissions for the Azure Functions, but if you just want to get this sample running - and are using the powershell module - you can use the `B2C-Grap-App` id and secret. You'll find the values if you type `$env:B2CAppID` and `$env:B2CAppKey` in your powershell session command prompt. 
+
+### Create an Azure Function App
+
+![Create an Azure Function App](/media/CreateFunctionApp.png)
 
 ## To Deploy the B2C Custom Policy
 
