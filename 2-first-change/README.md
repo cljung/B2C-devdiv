@@ -9,6 +9,35 @@ Details for editing your B2C Policy to add KMSI is in the documentation [here](h
 
 The part you add to SignupOrSignin.xml is to define how log the SSO cookie should live. You will already have a `<UserJourneyBehaviours>` element, so make sure you add the three new lines before the existing lines you have in that file.
 
+After you have made the changes described in the above documentation page, your files should contain thís:
+
+### TrustFrameworkExtensions.xml
+```xml
+<ClaimsProvider>
+  <DisplayName>Local Account</DisplayName>
+  <TechnicalProfiles>
+    <TechnicalProfile Id="SelfAsserted-LocalAccountSignin-Email">
+      <Metadata>
+        <Item Key="setting.enableRememberMe">True</Item>
+      </Metadata>
+    </TechnicalProfile>
+  </TechnicalProfiles>
+</ClaimsProvider>
+```
+
+### SigninOrSignup.xml
+```xml
+    <UserJourneyBehaviors>
+      <SingleSignOn Scope="Tenant" KeepAliveInDays="30" />
+      <SessionExpiryType>Absolute</SessionExpiryType>
+      <SessionExpiryInSeconds>1200</SessionExpiryInSeconds>
+      <JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="...your key..." DeveloperMode="true" ClientEnabled="true" ServerEnabled="true" TelemetryVersion="1.0.0" />
+      <ScriptExecution>Allow</ScriptExecution>
+    </UserJourneyBehaviors>
+```
+
+Remember not to test KMSI with an inprivate/incognito browser as the cookies will be lost when you close the browser. 
+
 ## Sign in with Username or LoyalityNumber
 
 The TrustFrameworkBase.xml defines a setting named `setting.operatingMode` set to email. This is the setting that forces the signing name to evaluate to an email address. In your TrustFrameworkExtensions.xml file, add the below line that changes this setting to `<Item Key="setting.operatingMode">username</Item>`. This will enable the input textbox in the UX to allow anything and not just an email.
@@ -20,14 +49,14 @@ The TrustFrameworkBase.xml defines a setting named `setting.operatingMode` set t
     <TechnicalProfile Id="SelfAsserted-LocalAccountSignin-Email">
       <Metadata>
         <Item Key="setting.enableRememberMe">True</Item>
-        <Item Key="setting.operatingMode">username</Item>
+        <Item Key="setting.operatingMode">username</Item> <!-- add this line -->
       </Metadata>
     </TechnicalProfile>
   </TechnicalProfiles>
 </ClaimsProvider>
 ```
 
-## Save, Upload and test the policy
+## Save, upload and test the policy
 
 Run the powershell command to upload the modified policies.
 
