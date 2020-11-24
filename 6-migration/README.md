@@ -167,7 +167,7 @@ If you at the same time have the Log window open in the Azure Function, you will
 
 ![TestMigration2](/media/TestMigration2.png)
 
-If you can then verify that the `requiresMigration` extension attribute has been flipped to `False` after the signin via running the following powershell command.
+You can then verify that the `requiresMigration` extension attribute has been flipped to `False` after the signin via running the following powershell command.
 
 ```powershell
 Get-AzureADUser -Filter "givenname eq 'alice'" | ConvertTo-json
