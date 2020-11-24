@@ -8,7 +8,7 @@ In the community github sample, there is a bigger sample called [signin-migratio
 
 The architecture is that you have users in a CSV file that are imported to B2C and Azure Table Storage. B2C does not know the password and Table Storage holds a password hash. Only the user knows the password. (That the password is in clear text is just so you can select it for this exersice.)
 
-The Azure Function serves two purposes; It is used to while uploading the contents of the CSV file and it is used by B2C to validate a userid and password during the first time a user signs in.
+The Azure Function serves two purposes; It is used to upload the contents of the CSV file to Table Storage and it is used by B2C to validate a userid and password during the first time a user signs in.
 
 ## CSV file with users
 
@@ -19,20 +19,20 @@ There is a sample CSV file named [newusers.csv](https://github.com/azure-ad-b2c/
 
 ## Preparing the Azure Table Storage
 
-The same CSV file needs to be imported to Azure Table Storage if you like to like to simulate not knowing the users password. The idea is that you have migrated the user details, like displayName, etc, but the password is unknown and needs to be stored elsewhere (Table Storage). The B2C policy will during first signin check the `requiresMigration` flag and see it is `True` which in turn means making a REST API call to an Azure Function that uses Azure Table Storage and verifies the password.
+The same CSV file needs to be imported to Azure Table Storage if you like to like to simulate seamless password migration. The idea is that you have migrated the user details, like displayName, etc, but the password is unknown and stored elsewhere (Table Storage). The B2C policy will during first signin check the `requiresMigration` flag and see it is `True` which in turn means making a REST API call to an Azure Function that uses Azure Table Storage and verifies the password.
  
-![StorageAccount](/media/StorageAccount1.png)
-
 If you don't have an Azure Storage account you can use, you need to create one in your Azure Subscription (not the B2C tenant). Make sure you specify this settings
 
 - Location - pick a location that matches your B2C tenant location
 - Account kind - StorageV2 (general purpose V2). Make sure you **not** pick the BlobStorage kind as it doesn't support Table Storage
 - Replication - Select Locally-redundant storage (LRS) as the others are overkill
 
-![StorageAccount2](/media/StorageAccount2.png)
- 
+![StorageAccount](/media/StorageAccount1.png)
+
 When the storage account is created, copy the storage `Conection String` from the `Access keys` menu item and save it somewhere as we need it later.
 
+![StorageAccount2](/media/StorageAccount2.png)
+ 
 ## Deploying the Azure Function
 
 The B2C policy needs help validating the userid/password externally and we will have an Azure Function as the REST API that B2C is going to call. This Azure Function contains code to interact with the Azure Table Storage we created above.
@@ -96,3 +96,81 @@ Then run the import command as below. This will load the contents of the CSV fil
 ```
 
 ## Import the CSV file to Azure Table Storage
+
+The import script to Azure Table Storage can be found [here](https://github.com/azure-ad-b2c/samples/blob/master/policies/signin-migration/table/scripts/save-users-to-tablestorage.ps1). Copy it and replace the url to point to your Azure Function. Then you run the command like below.
+
+```powershell
+.\save-users-to-tablestorage.ps1 -Delimiter ";" -f "...path-to-my-file...\newusers.csv"
+```
+
+Using the [Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) you can view a Table Storage table named `users` and see that you have created the users. 
+
+![StorageExplorer](/media/StorageExplorer.png)
+
+## Edit and upload the B2C Custom Policies
+
+You'll find the template B2C policies in [this github repo](https://github.com/azure-ad-b2c/samples/tree/master/policies/signin-migration/b2c/policy). You also need to copy the [TrustFrameworkBase.xml](https://github.com/Azure-Samples/active-directory-b2c-custom-policy-starterpack/blob/master/SocialAndLocalAccountsWithMfa/TrustFrameworkBase.xml) file from the Starter Pack.
+
+When you have saved the files to a local folder, then run the following command to change the settings to match your tenant.
+
+```powershell
+Set-AzureADB2CPolicyDetail
+```
+
+After that, you need to update the url endpoint to point to your Azure Function so that B2C can do the REST API call to validate the user and password. It is the `ServiceUrl` in the metadata section that needs updating.
+
+```xml
+    <ClaimsProvider>
+      <DisplayName>REST API to communicate with Legacy IdP</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="UserMigrationViaLegacyIdp">
+          <DisplayName>REST API call to communicate with Legacy IdP</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ServiceUrl">https://<yourazfuncname>.azurewebsites.net/api/TableStorageUser?code=...your code...</Item>
+            <Item Key="AuthenticationType">None</Item>
+            <Item Key="AllowInsecureAuthInProduction">true</Item>
+            <Item Key="SendClaimsIn">Body</Item>
+          </Metadata>
+```
+
+Change the UserJourney id to something new, like `SignupOrSignin-Migration`
+
+**TrustFrameworkExtensions.xml**
+```xml
+    <UserJourney Id="SignUpOrSignIn-Migration">
+```
+**SignupOrSignin.xml**
+```xml
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignUpOrSignIn-Migration" />
+```
+
+Then it is time to upload the policies to your B2C tenant
+```powershell
+Push-AzureADB2CPolicyToTenant
+```
+
+## Testing the Seamless migration
+
+You can now test the B2C policy that contains the Seamless Password Migration flow by running the policy.
+ 
+```powershell
+Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignupOrSignin.xml
+```
+
+Try to sign in with `alice@contoso.com` and the password you specified in the CSV file.
+
+![TestMigration1](/media/TestMigration1.png)
+
+If you at the same time have the Log window open in the Azure Function, you will see the trace message for when B2C makes the REST API can
+
+![TestMigration2](/media/TestMigration2.png)
+
+If you can then verify that the `requiresMigration` extension attribute has been flipped to `False` after the signin via running the following powershell command.
+
+```powershell
+Get-AzureADUser -Filter "givenname eq 'alice'" | ConvertTo-json
+```
+
+With this, you have completed the Seamless Migration exersice!
