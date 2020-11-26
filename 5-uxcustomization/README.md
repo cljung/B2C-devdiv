@@ -50,6 +50,8 @@ So, futher down in the `<BuildingBlocks>` element you add the following. It will
           <LocalizedString ElementType="UxElement" StringId="social_intro">Federated Identity Providers</LocalizedString>
           <LocalizedString ElementType="UxElement" StringId="button_signin">Login</LocalizedString>
           <LocalizedString ElementType="UxElement" StringId="createaccount_intro">Need an account?</LocalizedString>
+          <!-- to change the text of the KMSI checkbox -->
+          <LocalizedString ElementType="UxElement" StringId="remember_me">Remember me</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
     </Localization>    
