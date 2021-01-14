@@ -148,7 +148,7 @@ Change the UserJourney id to something new, like `SignupOrSignin-Migration`
 
 Then it is time to upload the policies to your B2C tenant
 ```powershell
-Push-AzureADB2CPolicyToTenant
+Deploy-AzureADB2CPolicyToTenant
 ```
 
 ## Testing the Seamless migration
