@@ -48,7 +48,7 @@ New-AzureADB2CPolicyProject -PolicyPrefix "t1"
 Now you have local policy files on your laptop that are ready to be uploaded. Run the Push command to upload them. The Push command will read the xml policy files, determind the correct order to upload them (base first, etc) and then use GraphAPI to upload them.
 
 ```powershell
-Push-AzureADB2CPolicyToTenant
+Deploy-AzureADB2CPolicyToTenant
 ```
 
 Once the policies are uploaded, you can use the Test command to launch a browser to run an authorize flow. It will start the default browser on your laptop. If you want to start a different browser you pass the `-Browser "Firefox"` argument. 

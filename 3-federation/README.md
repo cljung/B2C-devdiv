@@ -19,7 +19,7 @@ New-AzureADB2CPolicyProject -PolicyPrefix "fed"
 In order to test that they are working before you go any further, do the following and make sure it uploads correct and that you can sign in with a local account.
 
 ```powershell
-Push-AzureADB2CPolicyToTenant
+Deploy-AzureADB2CPolicyToTenant
 Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```
 
@@ -58,7 +58,7 @@ Open the file `TrustFrameworkExtensions.xml` in Visual Studio Code and make the 
 Then save the file, upload the policies again to B2C and do another test run.  
 
 ```powershell
-Push-AzureADB2CPolicyToTenant
+Deploy-AzureADB2CPolicyToTenant
 Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```
 

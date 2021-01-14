@@ -146,6 +146,6 @@ You need to edit the Relying Party file `SignUpOrSignin.xml` to make it allow ja
 ## Upload and test
 
 ```powershell
-Push-AzureADB2CPolicyToTenant
+Deploy-AzureADB2CPolicyToTenant
 Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```
