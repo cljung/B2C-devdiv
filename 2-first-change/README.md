@@ -64,7 +64,7 @@ Run the powershell command to upload the modified policies.
 Deploy-AzureADB2CPolicyToTenant
 ```
 
-Once the policies are uploaded, you can use the Test command to launch a browser to run an authorize flow. It will start the default browser on your laptop. If you want to start a different browser you pass the `-Browser "Firefox"` argument. 
+Once the policies are uploaded, you can use the Test command to launch a browser to run an authorize flow. It will start the default browser on your laptop. If you want to start a different browser you pass the `-Firefox`, `-Edge` or `-Chrome` argument. 
 
 ```powershell
 Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
