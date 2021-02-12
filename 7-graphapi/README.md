@@ -1,9 +1,9 @@
 # Creating Users via Microsoft Graph API
 
-Often the question is asked whether you can create users any other way than via the self-service signup. If you have looked at or done lab [6-migration](/6-migration) you know that you can. This sample is a deeper dive into [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/use-the-api) and how you can use it to create your Azure AD B2C users. There is an online query tool called [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer) that you can use to practice your queries. This sample will show you how you can create a user object, with extension attributes, with MFA phone number ready and also how to create a group object and make the user member of.
+Often the question is asked whether you can create users any other way than via the self-service signup. If you have looked at or done lab [6-migration](/6-migration) you know that you can. This sample is a deeper dive into [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/use-the-api) and how you can use it to create your Azure AD B2C users. There is an online query tool called [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer) that you can use to practice your queries. This sample will show you how you can create a user object, with extension attributes, with the MFA phone number ready to use. It also shows you how to create a group object and make the test user member of.
 
 ## Microsoft Graph Query and Powershell
-Working with Microsoft Graph API from the Powershell command prompt is all about using the `Invoke-RestMethod` with the correct Url, body payload and authentication header, since the Graph API is just a REST API which means you can invoke it from any tool or platform that is capable of making HTTP(s) calls. On Mac/Linux, this would probably mean using `curl`, but this sample is based on Powershell. If you're not on Windows, you have to install [Powershell for Mac](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-7). 
+Working with Microsoft Graph API from the Powershell command prompt is all about using the `Invoke-RestMethod` with the correct Url,  payload and authentication header, since the Graph API is just a REST API which means you can invoke it from any tool or platform that is capable of making HTTP(s) calls. On Mac/Linux, this would probably mean using `curl`, but this sample is based on Powershell. If you're not on Windows, you have to install [Powershell for Mac](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-7). 
 
 ### Helper module
 This sample contanis a [helper powershell module](GrapiAPI-Helper.psm1) for working with Graph API. It is by all means not complete and its aim is just to show you how easy it is to work with Graph API and Azure AD B2C. You need to import the module to make use of the commands in it.
@@ -11,7 +11,7 @@ This sample contanis a [helper powershell module](GrapiAPI-Helper.psm1) for work
 ```powershell
 import-module .\GraphAPI-Helper
 ```
-If you look into the source file of the helper you will see that there are a few low level functions called `Invoke-GraphRestMethodGet`, `Invoke-GraphRestMethodPost`, etc, that handles the actual invokation of the REST APIs. Then there are some more function-oriented commands named `New-GraphUSer`, `New-GrapGroup`, etc, who's responsible for creating the correct URL and request payload if it is a POST.
+If you look into the source file of the helper you will see that there are a few low level functions called `Invoke-GraphRestMethodGet`, `Invoke-GraphRestMethodPost`, etc, that handles the actual invokation of the REST APIs. Then there are some more function-oriented commands named `New-GraphUser`, `New-GrapGroup`, etc, who are responsible for formatting the correct URL and payload if it is a POST request.
 
 ### Getting an access token
 Getting an access token that you can use is more difficult than you think, because it requires registering an app and finding some interactive way of launching the authorization flow. An easy way could also be using `client credentials`, but here I use my own userid and the device login flow. In the [helper powershell module](GrapiAPI-Helper.psm1), I have created a command called `Connect-GraphDevicelogin` that acquires and access token for you with your own credentials using the devicelogin flow. If you already are loggin to portal.azure.com for your B2C tenant, all you have to do is to paste the device code when asked. The device code is automatically put on the clipboard, so all you need to do is to do Ctrl+V and press next.
@@ -23,7 +23,7 @@ Connect-GraphDevicelogin -TenantName "yourtenant.onmicrosoft.com" -Scope "Users.
 ![Device Login](/media/7-graphapi-devicelogin.png)
 
   
-The command will store your token in a gloval variable `$global:tokens` and will create the authentication header needed in `$global:authHeader`, so you need not worry about typing them in every command. 
+The command will store your token in a global variable `$global:tokens` and will create the authentication header needed in `$global:authHeader`, so you need not worry about typing them in every command. 
 
 ### Creating a test user
 
@@ -38,7 +38,7 @@ $LoyalityNumberAttrName = (New-GraphExtensionAttribute "LoyalityNumber" $b2cExte
 $MemberstipStatusAttrName = (New-GraphExtensionAttribute "MembershipStatus" $b2cExtensionsApp "String").name
 ```
 
-The command `New-GraphUser` will create a new user object. The standard user attributes are passed as parameters like `-DisplayName`, but additional attributes to stored are passed in a dictionary in key/value pairs. In the below case it is the extension attributes that are being passed this way, but you could set values for standard attributes like `city` and `streetAddress` this way too. 
+The command `New-GraphUser` will create a new user object. The standard user attributes are passed as parameters like `-DisplayName`, but additional attributes to store are passed in a dictionary in key/value pairs. In the below case it is the extension attributes that are being passed this way, but you could set values for standard attributes like `city` and `streetAddress` this way too. 
 
 ```powershell
 # create a user
@@ -158,4 +158,12 @@ POST https://graph.microsoft.com/beta/groups/73753dd5-9c66-4dd6-99cc-84b33611ce6
         "@odata.id": "https://graph.microsoft.com/beta/directoryObjects/9573339b-e5dd-41c1-9368-7c995d51a073"
     }
 
+```
+
+### Refreshing the Access Token
+
+The access token is valid for one hour and if you work longer that that you will receive access denied which means it is time to refresh the access token. In the Graph API helper module, there is a command named `Refresh-GraphAccessToken` that will do that for you.
+
+```Powershell
+Refresh-GraphAccessToken
 ```
