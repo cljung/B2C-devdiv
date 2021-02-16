@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GraphApp": {
+      "commandName": "Project",
+      "commandLineArgs": "\"yourtenant.onmicrosoft.com\" \"...your appid...\" \"...your app secret...\""
+    }
+  }
+}

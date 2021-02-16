@@ -2,6 +2,8 @@
 
 Often the question is asked whether you can create users any other way than via the self-service signup. If you have looked at or done lab [6-migration](/6-migration) you know that you can. This sample is a deeper dive into [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/use-the-api) and how you can use it to create your Azure AD B2C users. There is an online query tool called [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer) that you can use to practice your queries. This sample will show you how you can create a user object, with extension attributes, with the MFA phone number ready to use. It also shows you how to create a group object and make the test user member of.
 
+In the [src](src) folder, you have a DotNet Console program that makes the same GraphAPI queries, if you prefere to use DotNet.
+
 ## Microsoft Graph Query and Powershell
 Working with Microsoft Graph API from the Powershell command prompt is all about using the `Invoke-RestMethod` with the correct Url,  payload and authentication header, since the Graph API is just a REST API which means you can invoke it from any tool or platform that is capable of making HTTP(s) calls. On Mac/Linux, this would probably mean using `curl`, but this sample is based on Powershell. If you're not on Windows, you have to install [Powershell for Mac](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-7). 
 
