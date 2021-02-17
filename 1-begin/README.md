@@ -25,12 +25,15 @@ Then you need to complete the install. It is described in the other repo, but th
 ```powershell
 Connect-AzureADB2CEnv -t "yourtenant"
 New-AzureADB2CGraphApp -n "B2C-Graph-App" -CreateConfigFile
+Read-AzureADB2CConfig -ConfigPath .\b2cAppSettings_<yourtenant>.json
+# at this point, find B2C-Graph-App and grant consent to the app before continuing
 New-AzureADB2CLocalAdmin -u "graphexplorer" -RoleNames @("Company Administrator")
 Start-AzureADB2CPortal
-# find B2C-Graph-App and grant consent to the app before continuing
 ```
 
 **Before you continue, in the Azure Portal, find the `B2C-Graph-App` under App Registrations, goto API Permissions and grant admin consent for the App. If you don't, following commands will fail**
+
+If the creation of the `graphexplorer` LocalAdmin user throws any kind of error, please go into the portal, to `Roles and administrators`, find `Global administrator` and make the `graphexplorer` a global admin.
 
 If you haven't already completed the setup of Identity Experience Framework in your B2C tenant, run this command to complete it.
 ```powershell

@@ -1,0 +1,19 @@
+{
+    "accountEnabled": true,
+    "creationType": "LocalAccount",
+    "displayName": "Alice Contoso",
+    "givenName": "Alice",
+    "surname": "Contoso",
+    "passwordPolicies": "DisablePasswordExpiration, DisableStrongPassword",
+    "passwordProfile": {
+            "password": "SuperStrongPassword1",
+            "forceChangePasswordNextSignIn": false
+        },
+    "identities": [
+        {
+            "signInType": "emailAddress",
+            "issuer": "yourtenant.onmicrosoft.com",
+            "issuerAssignedId": "alice@contoso.com"
+        }
+    ]
+}
