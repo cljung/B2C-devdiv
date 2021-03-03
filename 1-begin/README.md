@@ -27,7 +27,7 @@ Connect-AzureADB2CEnv -t "yourtenant"
 New-AzureADB2CGraphApp -n "B2C-Graph-App" -CreateConfigFile
 Read-AzureADB2CConfig -ConfigPath .\b2cAppSettings_<yourtenant>.json
 # at this point, find B2C-Graph-App and grant consent to the app before continuing
-New-AzureADB2CLocalAdmin -u "graphexplorer" -RoleNames @("Company Administrator")
+New-AzureADB2CLocalAdmin -u "graphexplorer" -RoleNames @("Global Administrator")
 Start-AzureADB2CPortal
 ```
 
