@@ -23,7 +23,7 @@ git clone https://github.com/cljung/AzureAD-B2C-scripts.git
 cd AzureAD-B2C-scripts
 import-module .\AzureADB2C-Scripts.psm1
 ```
-If you don't have `git` installed, download it as a zipfile from [here](https://github.com/cljung/AzureAD-B2C-scripts/archive/refs/heads/master.zip). If you want to install `git`, go to this [link](https://git-scm.com/download/win).
+If you don't have `git` installed, you can installed from here [link](https://git-scm.com/download/win). You can also download the powershell module from github as a zipfile from this [link](https://github.com/cljung/AzureAD-B2C-scripts/archive/refs/heads/master.zip).
  
 Then you need to complete the install. It is described in the other repo, but the steps are repeated here.
 
