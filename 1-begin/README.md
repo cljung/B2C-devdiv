@@ -2,9 +2,13 @@
 
 This sample shows how to quickly setup Identity Experience Frameork using the B2C Powershell Module that exists in [this repo](https://github.com/cljung/AzureAD-B2C-scripts). The documentation for how to create a B2C tenant is available [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant), and you don't need to continue with the [Get started with custom policies](https://docs.microsoft.com/en-us/azure/active-directory-b2c/custom-policy-get-started?tabs=applications#custom-policy-starter-pack) manually as these scripts in this readme file will do that for you. At the end of this sample, you have a working B2C Custom Policy and it will take you less than 5 minutes to have it deployed.
 
-
 ## B2C Powershell Module - Install
 As mentioned, the [B2C Powershell Module](https://github.com/cljung/AzureAD-B2C-scripts) exists here and in order to use it, you need to `git clone` it and you need to either install the AzureAD powershell module on Windows. If you are on a Mac, you need to install [Powershell Core](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-7) and [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos). 
+
+On Windows, you need to make sure you can execute powershell commands, like `install-module` and `import-module`, so for that reason, open a Powershell command prompt as administrator and run
+```powershell
+Set-ExecutionPolicy unrestricted
+```
 
 On Windows, verify that you have the AzureAD module and install it if not.
 ```powershell
@@ -19,7 +23,8 @@ git clone https://github.com/cljung/AzureAD-B2C-scripts.git
 cd AzureAD-B2C-scripts
 import-module .\AzureADB2C-Scripts.psm1
 ```
-
+If you don't have `git` installed, download it as a zipfile from [here](https://github.com/cljung/AzureAD-B2C-scripts/archive/refs/heads/master.zip). If you want to install `git`, go to this [link](https://git-scm.com/download/win).
+ 
 Then you need to complete the install. It is described in the other repo, but the steps are repeated here.
 
 ```powershell
