@@ -5,17 +5,14 @@ This sample shows how to quickly setup Identity Experience Frameork using the B2
 ## B2C Powershell Module - Install
 As mentioned, the [B2C Powershell Module](https://github.com/cljung/AzureAD-B2C-scripts) exists here and in order to use it, you need to `git clone` it and you need to either install the AzureAD powershell module on Windows. If you are on a Mac, you need to install [Powershell Core](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-7) and [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos). 
 
-On Windows, you need to make sure you can execute powershell commands, like `install-module` and `import-module`, so for that reason, open a Powershell command prompt as administrator and run
+On Windows, verify that you have the AzureAD module and install it if not. This has to be run as an Administrator.
 ```powershell
 Set-ExecutionPolicy unrestricted
-```
-
-On Windows, verify that you have the AzureAD module and install it if not.
-```powershell
 # open a powershell command prompt as Administrator (Win-key, powershell, Run as Admin)
 if ($null -eq (get-module AzureAD)) {
     Install-Module -Name AzureAD
 }
+# close this command prompt and continue to work as a normal user
 ```
 
 ```powershell
