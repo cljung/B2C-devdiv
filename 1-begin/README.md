@@ -7,8 +7,8 @@ As mentioned, the [B2C Powershell Module](https://github.com/cljung/AzureAD-B2C-
 
 On Windows, verify that you have the AzureAD module and install it if not. This has to be run as an Administrator.
 ```powershell
-Set-ExecutionPolicy unrestricted
 # open a powershell command prompt as Administrator (Win-key, powershell, Run as Admin)
+Set-ExecutionPolicy unrestricted
 if ($null -eq (get-module AzureAD)) {
     Install-Module -Name AzureAD
 }
