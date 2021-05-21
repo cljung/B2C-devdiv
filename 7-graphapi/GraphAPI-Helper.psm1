@@ -169,6 +169,10 @@ function Get-GraphApp( $appName ) {
     return Invoke-GraphRestMethodGet "applications?`$filter=startswith(displayName,'$appName')"
 }
 
+function Get-GraphServicePrincipal( $appName ) {
+    #return Invoke-GraphRestMethodGet "applications?`$filter=startswith(displayName,'$appName')&`$select=id,appId,displayName"
+    return Invoke-GraphRestMethodGet "servicePrincipals?`$filter=startswith(displayName,'$appName')"
+}
 # ---------------------------------------------------------------------------------------------------
 # Helper functions to query GraphAPI
 # ---------------------------------------------------------------------------------------------------
@@ -287,6 +291,10 @@ function Remove-GraphGroup( $groupObjectId ) {
     return Invoke-GraphRestMethodDelete "groups/$groupObjectId"
 }
 
+function Get-GraphGroup( $groupName ) {
+    return Invoke-GraphRestMethodGet "groups?`$filter=startswith(displayName,'$groupName')"
+}
+
 function New-GraphGroupMember( $groupObjectId, $userObjectId ) {
     $body = @"
     { 
@@ -294,4 +302,22 @@ function New-GraphGroupMember( $groupObjectId, $userObjectId ) {
     }
 "@
     $members = Invoke-GraphRestMethodPost "groups/$groupObjectId/members/`$ref" $body
+}
+
+function New-GraphGroupAppRoleAssignment( $groupObjectId, $appRoleId, $servicePrincipalObjectId ) {
+    $body = @"
+    { 
+        "appRoleId":"$appRoleId",
+        "principalId":"$groupObjectId",
+        "resourceId":"$servicePrincipalObjectId"
+    }
+"@
+    $appRoles = Invoke-GraphRestMethodPost "groups/$groupObjectId/appRoleAssignments" $body
+}
+function Delete-GraphGroupAppRoleAssignment( $groupObjectId, $appRoleAssignmentId ) {
+    # $appRoleAssignmentId = id : R9-jU27ch0mVm6WdlA9es3R9IPKierhDgTE30JOjlQM
+    $appRoles = Invoke-GraphRestMethodDelete "groups/$groupObjectId/appRoleAssignments/$appRoleAssignmentId"
+}
+function Get-GraphGroupAppRoleAssignment( $groupObjectId ) {
+    return Invoke-GraphRestMethodGet "groups/$groupObjectId/appRoleAssignments"
 }
