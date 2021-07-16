@@ -1,0 +1,11 @@
+id;userName;emailAddress;emailVerified;accountEnabled;displayName;surname;givenname;mobile;phoneNumberVerified;Password
+327f0832-c6a3-4b8b-ab16-a0e193094cd8;alice;alice@contoso.com;true;true;Alice Contoso (Migrated);Contoso;Alice;+46112112;true;YadaYada1!
+0aaab2d6-110e-49e7-8cf0-f6aa22cf7e5f;bob;bob@contoso.com;true;true;Bob Contoso (Migrated);Contoso;Bob;+46112112;true;YadaYada1!
+fed739dc-0775-4d4b-9d3a-5bcd35417aa6;cedric;cedric@contoso.com;true;true;Cedric Contoso (Migrated);Contoso;Cedric;+46112112;true;YadaYada1!
+c5cccef8-6b85-4153-8127-94ef2fa2a0b0;david;david@contoso.com;true;true;David Contoso (Migrated);Contoso;David;+46112112;true;YadaYada1!
+f00a0696-a8ea-4ce5-8efe-456a15b06702;erica;erica@contoso.com;true;true;Erica Contoso (Migrated);Contoso;Erica;+46112112;true;YadaYada1!
+93e9a970-8146-4194-b269-3cf4adfb0cba;felicia;felicia@contoso.com;true;true;Felicia Contoso (Migrated);Contoso;Felicia;+46112112;true;YadaYada1!
+236eefe5-0e2d-4544-9d8d-e091cf7f2787;gustaf;gustaf@contoso.com;true;true;Gustaf Contoso (Migrated);Contoso;Gustaf;+46112112;true;YadaYada1!
+7aa5e71c-482a-4754-8f0f-3917e552667b;henriette;henriette@contoso.com;true;true;Henriette Contoso (Migrated);Contoso;Henriette;+46112112;true;YadaYada1!
+edb2af14-9a6e-493e-a1bd-9b61af504377;ivan;ivan@contoso.com;true;true;Ivan Contoso (Migrated);Contoso;Ivan;+46112112;true;YadaYada1!
+7fcd2395-4d00-4e80-9822-f6c91e13cb1a;josephine;josephine@contoso.com;true;true;Josephine Contoso (Migrated);Contoso;Josephine;+46112112;true;YadaYada1!

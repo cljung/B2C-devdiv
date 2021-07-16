@@ -4,14 +4,15 @@ param (
     [Parameter(Mandatory=$False)][Alias('d')][string]$Delimiter = ";", # the delimiter used in file 
     [Parameter(Mandatory=$False)][Alias('c')][string]$client_id = "", # the Client ID used to register the attribute
     [Parameter(Mandatory=$false)][switch]$ImportPassword = $False,
-    [Parameter(Mandatory=$False)][Alias('a')][string]$access_token = ""
+    [Parameter(Mandatory=$False)][Alias('a')][string]$access_token = "",
+    [Parameter(Mandatory=$False)][Alias('b')][int]$batch_size = 10
     )
 
 if ( 0 -eq $access_token.length ) {
     write-error "No access_token on command line"
     return
 }
-
+<# #>
 # if no appObjectId given, use the standard b2c-extensions-app
 if ( "" -eq $client_id ) {
     $appExt = Get-AzureADApplication -SearchString "b2c-extensions-app"
@@ -33,10 +34,36 @@ if ( $null -eq ($extAttrs | where {$_.Name -eq $phoneNumberVerifiedAttributeName
     write-error "Extension Attribute not registered: $phoneNumberVerifiedAttributeName"
     return
 } 
-
+<# #>#>
 $tmpPwd = "Aa$([guid]::NewGuid())!"
+$countImported = 0
 
-function CreateUserInB2C( $usr ) {
+function BatchCreateB2CUsers( $body ) {
+    $authHeader = @{"Authorization"= "Bearer $access_token";"Content-Type"="application/json";"ContentLength"=$body.length }
+    $url = "https://graph.microsoft.com/v1.0/`$batch"
+    try {
+        $resp = Invoke-WebRequest -Headers $authHeader -Uri $url -Method Post -Body $body    
+        foreach( $resp in ($resp.Content | ConvertFrom-json).responses) { 
+            if ( $resp.status -eq "201" ) {
+                $countImported++
+                write-host -BackgroundColor Black -ForegroundColor Green "id: " $resp.id " " $resp.body.id " " $resp.body.displayName
+            } else {
+                write-host -BackgroundColor Black -ForegroundColor Red -NoNewLine "id: " $resp.id " StatusCode: " $resp.status " Error: " $resp.body.error.message
+            }
+        }
+    } catch {
+        $exception = $_.Exception
+        write-host -BackgroundColor Black -ForegroundColor Red -NoNewLine "StatusCode: " $exception.Response.StatusCode.value__ " "
+        $streamReader = [System.IO.StreamReader]::new($exception.Response.GetResponseStream())
+        $streamReader.BaseStream.Position = 0
+        $streamReader.DiscardBufferedData()
+        $errBody = $streamReader.ReadToEnd()
+        $streamReader.Close()
+        write-host -BackgroundColor Black -ForegroundColor Red "Error: " $errBody    
+    }
+}
+
+function FormatB2CUserRecord( $usr ) {
     $pwd = $tmpPwd
     $requiresMigrationAttribute = "true"
     $passwordPolicies = "`"passwordPolicies`": `"DisablePasswordExpiration`","
@@ -83,30 +110,7 @@ function CreateUserInB2C( $usr ) {
           "$phoneNumberVerifiedAttributeName": $($usr.phoneNumberVerified)
         }
 "@
-
-    write-host "Creating user: $($usr.userName) / $($usr.emailAddress)"
-    #write-host $body
-    <##>
-    $authHeader = @{"Authorization"= "Bearer $access_token";"Content-Type"="application/json";"ContentLength"=$body.length }
-    $url = "https://graph.microsoft.com/v1.0/$tenant/users"
-    try {
-        $newUser = Invoke-WebRequest -Headers $authHeader -Uri $url -Method Post -Body $body    
-        $userObjectID = ($newUser.Content | ConvertFrom-json).objectId
-        write-host -BackgroundColor Black -ForegroundColor Green "$($usr.emailAddress)"
-        #write-host $newUser
-        #write-host $newUser.Content
-        $countCreated += 1
-    } catch {
-        $exception = $_.Exception
-        write-host -BackgroundColor Black -ForegroundColor Red -NoNewLine "StatusCode: " $exception.Response.StatusCode.value__ " "
-        $streamReader = [System.IO.StreamReader]::new($exception.Response.GetResponseStream())
-        $streamReader.BaseStream.Position = 0
-        $streamReader.DiscardBufferedData()
-        $errBody = $streamReader.ReadToEnd()
-        $streamReader.Close()
-        write-host -BackgroundColor Black -ForegroundColor Red "Error: " $errBody    
-    }
-    <##>
+return $body
 }
 
 
@@ -114,12 +118,51 @@ $csv = import-csv -path $path -Delimiter $Delimiter
 
 $startTime = Get-Date
 
+$payload = ""
 $count = 0
+$reqId = 0
+$sep = ""
+
 foreach( $usr in $csv ) {
-    CreateUserInB2C $usr
-    $count += 1
+    if ( $reqId -eq 0 ) {
+    $payload = @"
+{
+    "requests": [
+"@
+    }
+    $body = FormatB2CUserRecord $usr
+    $count++
+    $reqid++
+    $req = @"
+    {
+        "id": "$reqId",
+        "method": "POST",
+        "url": "/users",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body":
+        $body
+    }
+"@
+    $payload += $sep + $req
+    if ( $reqId -ge $batch_size ) {
+        $payload += "]}"     
+        #write-output "*** BATCH ***"   
+        #write-output $payload
+        BatchCreateB2CUsers $payload
+        $reqId = 0        
+        $sep = ""
+    } else {
+        $sep = ",`n"
+    }
 }
-write-output "Imported $count users"
+if ( $reqId -gt 0 ) {
+    $payload += "]}"
+    BatchCreateB2CUsers $payload
+}
+write-output "Imported $countImported/$count users"
+
 $finishTime = Get-Date
 $TotalTime = ($finishTime - $startTime).TotalSeconds
 Write-Output "Time: $TotalTime sec(s)"
