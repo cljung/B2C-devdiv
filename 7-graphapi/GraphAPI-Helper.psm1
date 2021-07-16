@@ -1,7 +1,7 @@
 function Connect-GraphDevicelogin {
     [cmdletbinding()]
     param( 
-        [Parameter()][Alias('c')]$ClientID = '1950a258-227b-4e31-a9cf-717495945fc2',        
+        [Parameter()][Alias('c')]$ClientID = '1950a258-227b-4e31-a9cf-717495945fc2',     # well-known client_id for powershell   
         [Parameter()][Alias('t')]$TenantName = 'common',        
         [Parameter()][Alias('r')]$Resource = "https://graph.microsoft.com/",        
         [Parameter()][Alias('s')]$Scope = "",        
@@ -48,16 +48,8 @@ function Connect-GraphDevicelogin {
     }
 
     try {
-        $DeviceCodeRequestParams = @{
-            Method = 'POST'
-            Uri    = "https://login.microsoftonline.com/$TenantName/oauth2/devicecode"
-            Body   = @{
-                resource  = $Resource
-                client_id = $ClientId
-                scope = $Scope
-            }
-        }
-        $DeviceCodeRequest = Invoke-RestMethod @DeviceCodeRequestParams
+        $DeviceCodeRequest = Invoke-RestMethod -Method "POST" -Uri "https://login.microsoftonline.com/$TenantName/oauth2/devicecode" `
+                                               -Body @{ resource=$Resource; client_id=$ClientId; scope=$Scope; }
         #write-host $DeviceCodeRequest
         Write-Host $DeviceCodeRequest.message -ForegroundColor Yellow
         $url = $DeviceCodeRequest.verification_url
@@ -70,22 +62,15 @@ function Connect-GraphDevicelogin {
             $ret = [System.Diagnostics.Process]::Start($pgm,"$params $url")
         }
 
-        $TokenRequestParams = @{
-            Method = 'POST'
-            Uri    = "https://login.microsoftonline.com/$TenantName/oauth2/token"
-            Body   = @{
-                grant_type = "urn:ietf:params:oauth:grant-type:device_code"
-                code       = $DeviceCodeRequest.device_code
-                client_id  = $ClientId
-            }
-        }
         $TimeoutTimer = [System.Diagnostics.Stopwatch]::StartNew()
         while ([string]::IsNullOrEmpty($TokenRequest.access_token)) {
             if ($TimeoutTimer.Elapsed.TotalSeconds -gt $Timeout) {
                 throw 'Login timed out, please try again.'
             }
             $TokenRequest = try {
-                Invoke-RestMethod @TokenRequestParams -ErrorAction Stop
+                Invoke-RestMethod -Method "POST" -Uri "https://login.microsoftonline.com/$TenantName/oauth2/token" `
+                                  -Body @{ grant_type="urn:ietf:params:oauth:grant-type:device_code"; code=$DeviceCodeRequest.device_code; client_id=$ClientId} `
+                                  -ErrorAction Stop
             }
             catch {
                 $Message = $_.ErrorDetails.Message | ConvertFrom-Json
@@ -130,12 +115,8 @@ function Refresh-GraphAccessToken {
     if ( $null -eq $refresh_token ) {
         $refresh_token = $global:tokens.refresh_token
     }
-    $refreshTokenParams = @{ 
-        grant_type = "refresh_token"
-        client_id = "$ClientID"
-        refresh_token = $refresh_token
-    }
-    $retval = Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantName/oauth2/token" -Body $refreshTokenParams
+    $retval = Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantName/oauth2/token" `
+                                -Body @{ grant_type="refresh_token"; client_id="$ClientID"; refresh_token=$refresh_token; }
     $global:tokens = $retval
     $global:authHeader =@{ 'Content-Type'='application/json'; 'Authorization'=$retval.token_type + ' ' + $retval.access_token }
 

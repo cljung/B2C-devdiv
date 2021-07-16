@@ -21,8 +21,8 @@ $MemberstipStatusAttrName = (New-GraphExtensionAttribute "MembershipStatus" $b2c
 # create a user
 [hashtable]$extAttrs = @{$LoyalityNumberAttrName="123456789"; $MemberstipStatusAttrName="Gold"}
 
-$newuser = New-GraphUser -email "alice@contoso.com" -Password $superSecretPassword `
-                        -DisplayName "Alice Contoso" -Surname "Contoso" -GivenName "Alice" -MobilePhone "+14255551212" `
+$newuser = New-GraphUser -email "cecil@contoso.com" -Password $superSecretPassword `
+                        -DisplayName "Cecil Contoso" -Surname "Contoso" -GivenName "Cecil" -MobilePhone "+14255551313" `
                         -ExtensionAttributes $extAttrs `
                         -EnablePhoneSignin
 
