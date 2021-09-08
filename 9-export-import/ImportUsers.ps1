@@ -1,6 +1,6 @@
 $targetTenantName = "yourtenant.onmicrosoft.com"
 $GraphEndpoint="https://graph.microsoft.com/beta"
-$userFile=".\data\Users.json"
+$usersFile=".\data\Users.json"
 $usersFileLookup=".\data\UsersLookup.json"
 $usersFileError=".\data\UsersError.json"
 $extAttrFileLookup=".\data\ExtensionAttributesLookup.json"
@@ -43,7 +43,9 @@ foreach( $user in $data.users ) {
     $user | Add-Member -MemberType NoteProperty -Name "identities" -Value $identities
     # change all yourtenant.onmicrosoft.com to the real value
     foreach( $identity in $identities ) {
-        $identity.issuer = $targetTenantName
+        if ( $identity.issuer.EndsWith(".onmicrosoft.com") ) {
+            $identity.issuer = $targetTenantName
+        }
     }
     $body = ($user | ConvertTo-json)
     #$body # dbg
