@@ -15,8 +15,9 @@ Set-Content -Path $userFile -Value "{ `"users`": ["
 $sep = " "
 $extensionAttributes=@()
 $resp = Invoke-RestMethod -Method GET -Uri "$GraphEndpoint/users?`$top=10" -Headers $authHeader
-$resp.value.Count
-while ( $resp.'@odata.nextLink' ) {
+$more = $true
+while ( $more ) {
+    $resp.value.Count
     foreach( $user in $resp.value ) {
         # get a list of props that have non-null values (we don't need to export/import nulls)
         $nonNullProps = ($user.psobject.properties.name).Where({ $null -ne $user.$_ })
@@ -31,8 +32,11 @@ while ( $resp.'@odata.nextLink' ) {
         Add-Content -Path $userFile -Value "$sep$row"
         $sep = ","
     }
-    $resp = Invoke-RestMethod -Method GET -Uri $resp.'@odata.nextLink' -Headers $authHeader
-    $resp.value.Count
+    if ( $resp.'@odata.nextLink' ) {
+         $resp = Invoke-RestMethod -Method GET -Uri $resp.'@odata.nextLink' -Headers $authHeader
+    } else {
+        $more = $false
+    }
 }
 # make the list of extension attributes unique (remove dups)
 $extensionAttributes = $extensionAttributes | select -Unique
