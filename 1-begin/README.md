@@ -27,10 +27,10 @@ Then you need to complete the install. It is described in the other repo, but th
 
 ```powershell
 Connect-AzADB2CDevicelogin -TenantName "yourtenant.onmicrosoft.com" -Scope "Directory.ReadWrite.All"
-New-AzureADB2CGraphApp -n "B2C-Graph-App" -CreateConfigFile
+New-AzADB2CGraphApp -n "B2C-Graph-App" -CreateConfigFile
 # at this point, find B2C-Graph-App in portal.azure.com/yourtenant.onmicrosoft.com and grant consent to the app before continuing
 New-AzureADB2CLocalAdmin -u "graphexplorer" -RoleNames @("Global Administrator")
-Start-AzureADB2CPortal
+Start-AzADB2CPortal
 ```
 
 **Before you continue, in the Azure Portal, find the `B2C-Graph-App` under App Registrations, goto API Permissions and grant admin consent for the App. If you don't, following commands will fail**
