@@ -14,25 +14,16 @@ if ( 0 -eq $access_token.length ) {
 
 # if no appObjectId given, use the standard b2c-extensions-app
 if ( "" -eq $client_id ) {
-    $appExt = Get-AzureADApplication -SearchString "b2c-extensions-app"
+    $appExt = Get-AzADApplication -DisplayNameStartWith "b2c-extensions-app"
 } else {
-    $appExt = Get-AzureADApplication -Filter "AppID eq '$client_id'"
+    [GUID]$appid = $client_id
+    $appExt = Get-AzADApplication -ApplicationId $appid
 }
 
 $client_id = $appExt.AppId   
 $extId = $client_id.Replace("-", "") # the name is w/o hyphens
 $requiresMigrationAttributeName = "extension_$($extId)_requiresMigration"
 $phoneNumberVerifiedAttributeName = "extension_$($extId)_phoneNumberVerified"
-
-$extAttrs = get-AzureADApplicationExtensionProperty -ObjectId $appExt.ObjectId
-if ( $null -eq ($extAttrs | where {$_.Name -eq $requiresMigrationAttributeName })) {
-    write-error "Extension Attribute not registered: $requiresMigrationAttributeName"
-    return
-} 
-if ( $null -eq ($extAttrs | where {$_.Name -eq $phoneNumberVerifiedAttributeName })) {
-    write-error "Extension Attribute not registered: $phoneNumberVerifiedAttributeName"
-    return
-} 
 
 $tmpPwd = "Aa$([guid]::NewGuid())!"
 

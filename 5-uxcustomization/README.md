@@ -13,7 +13,7 @@ This part shows you how you can modify UxElements via changes in the B2C policy 
 Starting a new B2C Custom Policy project with the ***B2C Powershell Module*** is very easy. You just run the following command. Then, open the folder in Visual Studio Code and continue with the below changes.
 
 ```powershell
-New-AzureADB2CPolicyProject -PolicyPrefix "ux"
+New-AzADB2CPolicyProject -PolicyPrefix "ux"
 ```
 
 ## Override standard B2C UX via ContentDefinitions
@@ -146,6 +146,6 @@ You need to edit the Relying Party file `SignUpOrSignin.xml` to make it allow ja
 ## Upload and test
 
 ```powershell
-Deploy-AzureADB2CPolicyToTenant
-Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
+Import-AzADB2CPolicyToTenant
+Test-AzADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```

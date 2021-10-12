@@ -13,14 +13,14 @@ Quickly run through the [1-begin](./1-begin) lab to make sure you have configure
 Starting a new B2C Custom Policy project with the ***B2C Powershell Module*** is very easy. You just run the following command.
 
 ```powershell
-New-AzureADB2CPolicyProject -PolicyPrefix "fed"
+New-AzADB2CPolicyProject -PolicyPrefix "fed"
 ```
 
 In order to test that they are working before you go any further, do the following and make sure it uploads correct and that you can sign in with a local account.
 
 ```powershell
-Deploy-AzureADB2CPolicyToTenant
-Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
+Import-AzADB2CPolicyToTenant
+Test-AzADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```
 
 ## Register an application in Azure AD for federation
@@ -40,7 +40,7 @@ Also, make sure you go into `Token configuration` to add email, family_name and 
 First, we need to add the client secret for the AzureAD application. This is done via the following command.
 
 ```powershell
-New-AzureADB2CPolicyKey -KeyContainerName "B2C_1A_FabrikamAppSecret" -KeyType "secret" -KeyUse "sig" -Secret $yoursecret
+New-AzADB2CPolicyKey -KeyContainerName "B2C_1A_FabrikamAppSecret" -KeyType "secret" -KeyUse "sig" -Secret $yoursecret
 ```
 
 Then, we need to add the ClaimsProvider for AzureAD. Note that the AadTenantName (before the dot) needs match the part of the KeyContainerName above. If you have a AadTenantName of contoso.com, the KeyContainerName must be B2C_1A_ContosoAppSecret. 
@@ -48,7 +48,7 @@ Then, we need to add the ClaimsProvider for AzureAD. Note that the AadTenantName
 The $AppId is the AppId (client_id) of the application you registered in AzureAD.
 
 ```powershell
-Set-AzureADB2CClaimsProvider -ProviderName "AzureAD" -AadTenantName "fabrikam.com" -client_id $AppId
+Set-AzADB2CClaimsProvider -ProviderName "AzureAD" -AadTenantName "fabrikam.com" -client_id $AppId
 ```
 
 Open the file `TrustFrameworkExtensions.xml` in Visual Studio Code and make the following changes.
@@ -58,8 +58,8 @@ Open the file `TrustFrameworkExtensions.xml` in Visual Studio Code and make the 
 Then save the file, upload the policies again to B2C and do another test run.  
 
 ```powershell
-Deploy-AzureADB2CPolicyToTenant
-Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
+Import-AzADB2CPolicyToTenant
+Test-AzADB2CPolicy -n "ABC-WebApp" -p .\SignUpOrSignin.xml
 ```
 
 You should see something like the screenshots at top of this page.

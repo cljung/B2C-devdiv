@@ -61,7 +61,7 @@ Get the Function Url and save it somewhere as we will need to add it to the B2C 
 Open a powershell command prompt. Run the below command and login as your self to your tenant. The b2cAppSettings file gets created in step [1-begin](/1-begin), so you need to complete that step.
 
 ```powershell
-Connect-AzureADB2CEnv -ConfigPath .\b2cAppSettings_<yourtenant>.json
+Connect-AzADB2C -ConfigPath .\b2cAppSettings_<yourtenant>.json
 ```
 
 ## Import the CSV file to B2C
@@ -71,28 +71,28 @@ Before importing the users, we need to create two extension attributes. The `req
 To create the extension attributes
 
 ```powershell
-$appExt = Get-AzureADApplication -SearchString "b2c-extensions-app"
-New-AzureADApplicationExtensionProperty -ObjectID $appExt.objectId -DataType "boolean" -Name "phoneNumberVerified" -TargetObjects @("User") 
-New-AzureADApplicationExtensionProperty -ObjectID $appExt.objectId -DataType "boolean" -Name "requiresMigration" -TargetObjects @("User") 
+New-AzADB2CExtensionAttribute -AttributeName "requiresMigration" -DataType "Boolean"
+New-AzADB2CExtensionAttribute -AttributeName "phoneNumberVerified" -DataType "Boolean"
 ```
 
 The next step is to get an access token that can be used for creatig the users via Microsoft Graph API. The DeviceLogin will open up your browser and ask you to type the code. You can type Ctrl+V and paste it from the clipboard as the command put it on the clipboard.
 
 ```powershell
-$tokens = Connect-AzureADB2CDevicelogin -TenantId $global:TenantId -Scope "Directory.ReadWrite.All"
+Connect-AzADB2CDevicelogin -TenantId $global:TenantId -Scope "Directory.ReadWrite.All"
+$access_token = $global:authHeader.Authorization.Split(" ")[1]
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code C2SDABRH4 to authenticate.
 ```
 
 To test that the access token works, you can issue the below command to list all users
 
 ```powershell
-$resp = Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/users" -Headers @{'Authorization'= $tokens.token_type + ' ' + $tokens.access_token } -Method "GET" -ContentType "application/json"
+$resp = Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/users" -Headers $global:authHeader -Method "GET" -ContentType "application/json"
 $resp.value
 ```
 Then run the import command as below. This will load the contents of the CSV file, then iterate over each record and make a POST to Graph API that will create the user object in B2C. If you like to import the password from the CSV file, you need to add the `-ImportPassword` switch. If you don't pass that switch, the password will be in Azure Table Storage (see below) and we will ask for external validation at first signin.
 
 ```powershell
-.\import-users-from-csv.ps1 -t $global:tenantName -access_token $tokens.access_token -Delimiter ";" -f "...path-to-my-file...\newusers.csv"
+.\import-users-from-csv.ps1 -t $global:tenantName -access_token $access_token -Delimiter ";" -f "...path-to-my-file...\newusers.csv"
 ```
 
 ## Import the CSV file to Azure Table Storage
@@ -114,7 +114,7 @@ You'll find the template B2C policies in [this github repo](https://github.com/a
 When you have saved the files to a local folder, then run the following command to change the settings to match your tenant.
 
 ```powershell
-Set-AzureADB2CPolicyDetail
+Set-AzADB2CPolicyDetail
 ```
 
 After that, you need to update the url endpoint to point to your Azure Function so that B2C can do the REST API call to validate the user and password. It is the `ServiceUrl` in the metadata section that needs updating.
@@ -148,7 +148,7 @@ Change the UserJourney id to something new, like `SignupOrSignin-Migration`
 
 Then it is time to upload the policies to your B2C tenant
 ```powershell
-Deploy-AzureADB2CPolicyToTenant
+Import-AzADB2CPolicyToTenant
 ```
 
 ## Testing the Seamless migration
@@ -156,7 +156,7 @@ Deploy-AzureADB2CPolicyToTenant
 You can now test the B2C policy that contains the Seamless Password Migration flow by running the policy.
  
 ```powershell
-Test-AzureADB2CPolicy -n "ABC-WebApp" -p .\SignupOrSignin.xml
+Test-AzADB2CPolicy -n "ABC-WebApp" -p .\SignupOrSignin.xml
 ```
 
 Try to sign in with `alice@contoso.com` and the password you specified in the CSV file.
@@ -170,7 +170,8 @@ If you at the same time have the Log window open in the Azure Function, you will
 You can then verify that the `requiresMigration` extension attribute has been flipped to `False` after the signin via running the following powershell command.
 
 ```powershell
-Get-AzureADUser -Filter "givenname eq 'alice'" | ConvertTo-json
+$resp = Invoke-RestMethod -Uri "https://graph.microsoft.com/beta/users?$filter=givenname eq 'alice" -Headers $global:authHeader -Method "GET" -ContentType "application/json"
+$resp.value
 ```
 
 With this, you have completed the Seamless Migration exersice!
